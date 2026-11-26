@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RedLine – Blood donors and urgent requests</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
+<style>
+:root{--bg:#f4f6f8;--surf:#fff;--ink:#14213d;--mute:#5b6679;--line:#dde2ea;--red:#c8102e;--redbg:#fde8eb;--ok:#177245;--okbg:#e2f4ea;--warn:#8a5a00;--warnbg:#fff0cf;--blue:#1d4ed8;--bluebg:#e3ebff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1420;--surf:#171f2e;--ink:#e8edf6;--mute:#98a3b8;--line:#2a3447;--red:#ff4d63;--redbg:#3a1820;--ok:#4cd08a;--okbg:#12301f;--warn:#f5c04a;--warnbg:#3a2d0e;--blue:#8fb0ff;--bluebg:#1a2850;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1420;--surf:#171f2e;--ink:#e8edf6;--mute:#98a3b8;--line:#2a3447;--red:#ff4d63;--redbg:#3a1820;--ok:#4cd08a;--okbg:#12301f;--warn:#f5c04a;--warnbg:#3a2d0e;--blue:#8fb0ff;--bluebg:#1a2850;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:880px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.logo{width:44px;height:44px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);background:var(--red);flex:none}
+h1{font-size:1.6rem;margin:0;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+header p{margin:0;color:var(--mute);font-size:.9rem}
+nav{display:flex;gap:6px;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:5px;margin-bottom:18px}
+nav button{flex:1;border:0;background:none;color:var(--mute);font:inherit;font-weight:600;padding:10px 6px;border-radius:8px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--ink);color:var(--bg)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px}
+h2{margin:0 0 4px;font-size:1.25rem;font-weight:800}
+.sub{color:var(--mute);margin:0 0 16px;font-size:.92rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+label{display:block;font-weight:600;font-size:.88rem;margin-bottom:5px}
+input,select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.full{grid-column:1/-1}
+.groups{display:flex;flex-wrap:wrap;gap:8px}
+.groups input{position:absolute;opacity:0;width:0}
+.groups label{margin:0;min-width:58px;text-align:center;padding:9px 12px;border:2px solid var(--line);border-radius:10px;font-weight:800;font-size:1.05rem;cursor:pointer}
+.groups input:checked+label{background:var(--red);border-color:var(--red);color:#fff}
+.groups input:focus-visible+label{outline:3px solid var(--blue);outline-offset:2px}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:11px 18px;cursor:pointer;background:var(--red);color:#fff}
+.btn.alt{background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.btn.sm{padding:7px 12px;font-size:.85rem;border-radius:8px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tag{display:inline-block;font-size:.78rem;font-weight:700;padding:2px 9px;border-radius:99px}
+.t-open{background:var(--redbg);color:var(--red)}.t-prog{background:var(--warnbg);color:var(--warn)}.t-done{background:var(--okbg);color:var(--ok)}.t-cancel{background:var(--bg);color:var(--mute);border:1px solid var(--line)}
+.item{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;background:var(--surf)}
+.item.urgent{border-left:6px solid var(--red)}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.bg{display:inline-grid;place-items:center;min-width:48px;height:48px;border-radius:12px;background:var(--redbg);color:var(--red);font-weight:800;font-size:1.15rem;flex:none}
+.who{display:flex;gap:12px;align-items:center}
+.meta{color:var(--mute);font-size:.88rem}
+.matches{margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+.match{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.match:last-child{border:0}
+.km{font-weight:800}
+.empty{text-align:center;color:var(--mute);padding:26px 10px}
+.filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.filters select{width:auto}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;z-index:20}
+.hide{display:none}
+a{color:var(--blue)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo" aria-hidden="true"></div><div><h1>RedLine</h1><p>Find compatible blood donors near a patient, fast.</p></div></header>
+<nav role="tablist" id="tabs">
+<button role="tab" data-t="request" aria-selected="true">Raise request</button>
+<button role="tab" data-t="tickets" aria-selected="false">Tickets <span id="openCount"></span></button>
+<button role="tab" data-t="register" aria-selected="false">Register donor</button>
+<button role="tab" data-t="donors" aria-selected="false">Donors</button>
+</nav>
+
+<section id="p-request" class="panel">
+<h2>Raise an urgent request</h2>
+<p class="sub">A ticket is created and compatible donors are listed nearest first.</p>
+<div class="grid">
+<div><label for="rName">Patient name</label><input id="rName" autocomplete="off"></div>
+<div><label for="rPhone">Contact phone</label><input id="rPhone" inputmode="tel"></div>
+<div class="full"><label id="lbR">Blood group needed</label><div class="groups" id="rGroups" aria-labelledby="lbR"></div></div>
+<div><label for="rUnits">Units needed</label><input id="rUnits" type="number" min="1" max="20" value="2"></div>
+<div><label for="rUrg">Urgency</label><select id="rUrg"><option value="Critical">Critical (within 2 hours)</option><option value="Urgent" selected>Urgent (within 24 hours)</option><option value="Planned">Planned (this week)</option></select></div>
+<div><label for="rHosp">Hospital</label><input id="rHosp" placeholder="e.g. AIIMS Bhopal"></div>
+<div><label for="rArea">Location</label><select id="rArea"></select></div>
+<div class="full row"><button class="btn alt sm" id="gps" type="button">Use my current location</button><span class="meta" id="gpsNote"></span></div>
+<div class="full"><button class="btn" id="rSubmit" type="button">Raise request</button></div>
+</div>
+</section>
+
+<section id="p-tickets" class="panel hide">
+<h2>Request tickets</h2>
+<p class="sub">Open a ticket to see compatible donors, nearest first, and update its status.</p>
+<div class="filters"><select id="fStatus" aria-label="Filter by status"><option value="">All statuses</option><option>Open</option><option>In progress</option><option>Fulfilled</option><option>Cancelled</option></select></div>
+<div id="tList"></div>
+</section>
+
+<section id="p-register" class="panel hide">
+<h2>Register as a donor</h2>
+<p class="sub">Your phone number is shown only to people raising requests.</p>
+<div class="grid">
+<div><label for="dName">Full name</label><input id="dName" autocomplete="off"></div>
+<div><label for="dPhone">Phone</label><input id="dPhone" inputmode="tel"></div>
+<div class="full"><label id="lbD">Blood group</label><div class="groups" id="dGroups" aria-labelledby="lbD"></div></div>
+<div><label for="dArea">Area</label><select id="dArea"></select></div>
+<div><label for="dAvail">Availability</label><select id="dAvail"><option>Available now</option><option>Evenings and weekends</option><option>Not available</option></select></div>
+<div><label for="dLast">Last donated (optional)</label><input id="dLast" type="date"></div>
+<div class="full"><button class="btn" id="dSubmit" type="button">Register donor</button></div>
+</div>
+</section>
+
+<section id="p-donors" class="panel hide">
+<h2>Registered donors</h2>
+<p class="sub">Change availability any time so requests only reach people who can help.</p>
+<div class="filters"><select id="fGroup" aria-label="Filter by group"></select></div>
+<div id="dList"></div>
+</section>
+</div>
+<div id="toast" class="toast hide" role="status"></div>
+
+<script>
+const GROUPS=['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+// recipient group -> donor groups that can give to them
+const CAN={'A+':['A+','A-','O+','O-'],'A-':['A-','O-'],'B+':['B+','B-','O+','O-'],'B-':['B-','O-'],'AB+':GROUPS,'AB-':['A-','B-','AB-','O-'],'O+':['O+','O-'],'O-':['O-']};
+const AREAS={'New Market':[23.2330,77.4010],'MP Nagar':[23.2332,77.4344],'Arera Colony':[23.2147,77.4333],'Kolar Road':[23.1720,77.4170],'Bairagarh':[23.2790,77.3380],'Habibganj':[23.2210,77.4380],'Piplani':[23.2410,77.4720],'Shahpura':[23.1990,77.4250],'Hoshangabad Road':[23.1850,77.4600],'Berasia Road':[23.3000,77.3900],'Govindpura':[23.2640,77.4750],'Ashoka Garden':[23.2600,77.4600]};
+const STATUSES=['Open','In progress','Fulfilled','Cancelled'];
+const $=id=>document.getElementById(id);
+let S={donors:[],tickets:[],seq:1000};
+let gpsPos=null,open={};
+
+function load(){try{const r=localStorage.getItem('redline-v1');if(r)S=JSON.parse(r)}catch(e){}
+ if(!S.donors||!S.donors.length&&!S.tickets.length&&!S.seeded)seed()}
+function save(){try{localStorage.setItem('redline-v1',JSON.stringify(S))}catch(e){}}
+function seed(){S.seeded=1;const d=[['Aarav Sharma','O-','MP Nagar','Available now'],['Priya Verma','A+','Arera Colony','Available now'],['Rohan Patel','B+','New Market','Evenings and weekends'],['Sana Khan','O+','Kolar Road','Available now'],['Vikram Singh','AB+','Piplani','Available now'],['Neha Joshi','A-','Habibganj','Not available'],['Imran Ali','O+','Bairagarh','Available now'],['Kavya Rao','B-','Shahpura','Available now']];
+ S.donors=d.map((x,i)=>({id:'d'+i,name:x[0],phone:'98270'+String(10000+i*137).slice(0,5),group:x[1],area:x[2],avail:x[3],last:''}));
+ S.tickets=[{id:'BR-1001',patient:'Ramesh Gupta',phone:'9425011122',group:'O+',units:2,urgency:'Critical',hospital:'AIIMS Bhopal',area:'Saket Nagar',loc:[23.2060,77.4570],status:'Open',contacted:[],created:Date.now()-3600e3}];
+ S.seq=1001;save()}
+
+function km(a,b){const R=6371,r=x=>x*Math.PI/180,dLa=r(b[0]-a[0]),dLo=r(b[1]-a[1]);
+ const h=Math.sin(dLa/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dLo/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.remove('hide');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.add('hide'),2400)}
+function eligible(d){if(!d.last)return true;return (Date.now()-new Date(d.last))/864e5>=90}
+function matches(t){return S.donors.filter(d=>CAN[t.group].includes(d.group)&&d.avail!=='Not available'&&eligible(d))
+ .map(d=>({d,km:km(t.loc,AREAS[d.area])})).sort((a,b)=>a.km-b.km||(a.d.group===t.group?-1:1))}
+const tagCls={'Open':'t-open','In progress':'t-prog','Fulfilled':'t-done','Cancelled':'t-cancel'};
+
+function groupPicker(id,name,def){$(id).innerHTML=GROUPS.map(g=>`<span><input type="radio" name="${name}" id="${name}${g}" value="${g}" ${g===def?'checked':''}><label for="${name}${g}">${g}</label></span>`).join('')}
+function areaOpts(id){$(id).innerHTML=Object.keys(AREAS).map(a=>`<option>${a}</option>`).join('')}
+const val=n=>(document.querySelector(`input[name=${n}]:checked`)||{}).value;
+
+function renderTickets(){
+ const f=$('fStatus').value;const list=S.tickets.filter(t=>!f||t.status===f).sort((a,b)=>b.created-a.created);
+ const oc=S.tickets.filter(t=>t.status==='Open'||t.status==='In progress').length;$('openCount').textContent=oc?`(${oc})`:'';
+ if(!list.length){$('tList').innerHTML='<div class="empty">No tickets yet. Raise a request to create one.</div>';return}
+ $('tList').innerHTML=list.map(t=>{const live=t.status==='Open'||t.status==='In progress';
+  let body='';
+  if(open[t.id]){const m=matches(t);
+   body=`<div class="matches"><strong>${m.length} compatible donor${m.length===1?'':'s'}, nearest first</strong>
+   <div class="meta" style="margin-bottom:6px">Accepts: ${CAN[t.group].join(', ')}</div>`+
+   (m.length?m.map(x=>`<div class="match"><div class="who"><span class="bg">${x.d.group}</span><div><div><b>${esc(x.d.name)}</b></div><div class="meta">${esc(x.d.area)} · ${esc(x.d.avail)}</div></div></div>
+   <div class="row"><span class="km">${x.km.toFixed(1)} km</span><a href="tel:${esc(x.d.phone)}" class="btn sm alt" style="text-decoration:none">Call</a>
+   ${t.contacted.includes(x.d.id)?'<span class="tag t-done">Contacted</span>':live?`<button class="btn sm" data-act="contact" data-t="${t.id}" data-d="${x.d.id}">Mark contacted</button>`:''}</div></div>`).join(''):'<div class="empty">No available compatible donors yet. Try again later or widen the search by asking donors to register.</div>')+`</div>`}
+  return `<div class="item ${live&&t.urgency==='Critical'?'urgent':''}"><div class="top"><div class="who"><span class="bg">${t.group}</span><div><div><b>${esc(t.patient)}</b> <span class="tag ${tagCls[t.status]}">${t.status}</span></div>
+  <div class="meta">${t.id} · ${t.units} unit${t.units>1?'s':''} · ${t.urgency}</div><div class="meta">${esc(t.hospital||'Hospital not given')}, ${esc(t.area)} · <a href="tel:${esc(t.phone)}">${esc(t.phone)}</a></div></div></div>
+  <div class="row"><button class="btn sm alt" data-act="toggle" data-t="${t.id}">${open[t.id]?'Hide donors':'Find donors'}</button>
+  <select data-act="status" data-t="${t.id}" aria-label="Status of ${t.id}">${STATUSES.map(s=>`<option ${s===t.status?'selected':''}>${s}</option>`).join('')}</select></div></div>${body}</div>`}).join('')}
+
+function renderDonors(){
+ const g=$('fGroup').value;const l=S.donors.filter(d=>!g||d.group===g);
+ $('dList').innerHTML=l.length?l.map(d=>`<div class="item"><div class="top"><div class="who"><span class="bg">${d.group}</span><div><div><b>${esc(d.name)}</b></div><div class="meta">${esc(d.area)} · ${esc(d.phone)}${d.last&&!eligible(d)?' · Donated recently, resting':''}</div></div></div>
+ <select data-act="avail" data-d="${d.id}" aria-label="Availability of ${esc(d.name)}">${['Available now','Evenings and weekends','Not available'].map(a=>`<option ${a===d.avail?'selected':''}>${a}</option>`).join('')}</select></div></div>`).join(''):'<div class="empty">No donors for this group yet. Register one to get started.</div>'}
+
+function tab(t){document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===t));
+ ['request','tickets','register','donors'].forEach(p=>$('p-'+p).classList.toggle('hide',p!==t));
+ if(t==='tickets')renderTickets();if(t==='donors')renderDonors()}
+
+function init(){load();
+ groupPicker('rGroups','rg','O+');groupPicker('dGroups','dg','O+');areaOpts('rArea');areaOpts('dArea');
+ $('fGroup').innerHTML='<option value="">All groups</option>'+GROUPS.map(g=>`<option>${g}</option>`).join('');
+ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>tab(b.dataset.t));
+ $('fStatus').onchange=renderTickets;$('fGroup').onchange=renderDonors;
+ $('rArea').onchange=()=>{gpsPos=null;$('gpsNote').textContent=''};
+ $('gps').onclick=()=>{if(!navigator.geolocation){toast('Location is not supported on this device');return}
+  navigator.geolocation.getCurrentPosition(p=>{gpsPos=[p.coords.latitude,p.coords.longitude];$('gpsNote').textContent='Using your current location'},()=>toast('Location blocked. Pick an area instead.'))};
+ $('rSubmit').onclick=()=>{const name=$('rName').value.trim(),phone=$('rPhone').value.trim();
+  if(!name||!/^[0-9+\s-]{7,15}$/.test(phone)){toast('Enter the patient name and a valid phone number');return}
+  const area=$('rArea').value,id='BR-'+(++S.seq);
+  const t={id,patient:name,phone,group:val('rg'),units:Math.max(1,+$('rUnits').value||1),urgency:$('rUrg').value,hospital:$('rHosp').value.trim(),area:gpsPos?'Current location':area,loc:gpsPos||AREAS[area],status:'Open',contacted:[],created:Date.now()};
+  S.tickets.push(t);save();open[id]=true;['rName','rPhone','rHosp'].forEach(i=>$(i).value='');gpsPos=null;$('gpsNote').textContent='';
+  toast('Ticket '+id+' raised');tab('tickets')};
+ $('dSubmit').onclick=()=>{const name=$('dName').value.trim(),phone=$('dPhone').value.trim();
+  if(!name||!/^[0-9+\s-]{7,15}$/.test(phone)){toast('Enter your name and a valid phone number');return}
+  S.donors.push({id:'d'+Date.now(),name,phone,group:val('dg'),area:$('dArea').value,avail:$('dAvail').value,last:$('dLast').value});save();
+  ['dName','dPhone','dLast'].forEach(i=>$(i).value='');toast('Donor registered');tab('donors')};
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='toggle'){open[b.dataset.t]=!open[b.dataset.t];renderTickets()}
+  if(a==='contact'){const t=S.tickets.find(x=>x.id===b.dataset.t);t.contacted.push(b.dataset.d);if(t.status==='Open')t.status='In progress';save();renderTickets();toast('Marked as contacted')}});
+ document.addEventListener('change',e=>{const b=e.target.closest('select[data-act]');if(!b)return;
+  if(b.dataset.act==='status'){S.tickets.find(x=>x.id===b.dataset.t).status=b.value;save();renderTickets();toast('Status updated to '+b.value)}
+  if(b.dataset.act==='avail'){S.donors.find(x=>x.id===b.dataset.d).avail=b.value;save();toast('Availability updated')}});
+ renderTickets()}
+init();
+</script>
+</body>
+</html>
